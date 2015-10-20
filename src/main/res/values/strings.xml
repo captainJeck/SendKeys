@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SendKeys</string>
+    <string name="open_float_button">开启悬浮按钮</string>
+</resources>
