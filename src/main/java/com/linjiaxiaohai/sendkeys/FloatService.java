@@ -11,8 +11,6 @@ import android.view.WindowManager;
 
 import com.linjiaxiaohai.sendkeys.view.FloatButton;
 
-import java.io.IOException;
-
 /**
  * float button
  *
@@ -41,20 +39,16 @@ public class FloatService extends Service {
         floatButton.setOnTouchListener(new FloatButton.OnTouchListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    Runtime.getRuntime().exec("input keyevent " + KeyEvent.KEYCODE_HOME);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                ShellUtils.execCommand("input keyevent " + KeyEvent.KEYCODE_HOME, true);
+                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                homeIntent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(homeIntent);
             }
 
             @Override
             public void onDoubleClick(View view) {
-                try {
-                    Runtime.getRuntime().exec("input keyevent " + KeyEvent.KEYCODE_MENU);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                ShellUtils.execCommand("input keyevent " + KeyEvent.KEYCODE_MENU, true);
             }
         });
 
