@@ -20,13 +20,14 @@ public class MainActivity extends AppCompatActivity {
         mFloatSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton button, boolean b) {
-//                floatButton.show(b);
+                showFloatButton(b);
             }
         });
+    }
 
+    private void showFloatButton(boolean isFloat) {
         Intent intent = new Intent(this, FloatService.class);
+        intent.setAction(isFloat ? FloatService.ACTION_SHOW : FloatService.ACTION_HIDE);
         startService(intent);
-
-//        finish();
     }
 }

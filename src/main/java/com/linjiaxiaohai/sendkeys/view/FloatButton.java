@@ -23,6 +23,7 @@ public class FloatButton extends ImageButton {
     private WindowManager.LayoutParams params;
     private DisplayMetrics displayMetrics;
     private GestureDetector gestureDetector;
+    private boolean isFloat;
 
     private static final String TAG = "FloatButton";
 
@@ -51,6 +52,7 @@ public class FloatButton extends ImageButton {
     }
 
     public void show(boolean isFloat) {
+        this.isFloat = isFloat;
         try {
             if (isFloat) {
                 windowManager.addView(this, params);
@@ -62,8 +64,17 @@ public class FloatButton extends ImageButton {
         }
     }
 
+    public boolean isFloat() {
+        return isFloat;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_UP:
+                move(getStickX(event.getRawX()), event.getRawY());
+                break;
+        }
         return gestureDetector.onTouchEvent(event);
     }
 
@@ -83,12 +94,6 @@ public class FloatButton extends ImageButton {
         }
 
         @Override
-        public boolean onDown(MotionEvent e) {
-            Log.i("FloatButton", "onDown");
-            return super.onDown(e);
-        }
-
-        @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             if (getOnTouchListener() != null) {
                 getOnTouchListener().onClick(FloatButton.this);
@@ -104,6 +109,17 @@ public class FloatButton extends ImageButton {
             return super.onDoubleTap(e);
         }
     };
+
+    private float getStickX(float x) {
+        if (isHalfScreenWidth(x)) {
+            return displayMetrics.widthPixels;
+        }
+        return 0;
+    }
+
+    private boolean isHalfScreenWidth(float x) {
+        return x - displayMetrics.widthPixels / 2 > 0;
+    }
 
     private OnTouchListener onTouchListener;
 

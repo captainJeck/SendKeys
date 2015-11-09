@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -22,6 +21,8 @@ public class FloatService extends Service {
     private WindowManager.LayoutParams params;
     private DisplayMetrics displayMetrics;
 
+    public static final String ACTION_SHOW = "com.linjiaxiaohai.sendkeys.action.show";
+    public static final String ACTION_HIDE = "om.linjiaxiaohai.sendkeys.action.hide";
 
     public FloatService() {
     }
@@ -34,26 +35,45 @@ public class FloatService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        floatButton = new FloatButton(this);
-        floatButton.setImageResource(R.drawable.ic_launcher);
-        floatButton.setOnTouchListener(new FloatButton.OnTouchListener() {
-            @Override
-            public void onClick(View view) {
-//                ShellUtils.execCommand("input keyevent " + KeyEvent.KEYCODE_HOME, true);
-                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                homeIntent.addCategory(Intent.CATEGORY_HOME);
-                startActivity(homeIntent);
+        if (intent != null) {
+            switch (intent.getAction()) {
+                case ACTION_SHOW:
+                    show();
+                    break;
+                case ACTION_HIDE:
+                    hide();
+                    break;
             }
+        }
 
-            @Override
-            public void onDoubleClick(View view) {
-                ShellUtils.execCommand("input keyevent " + KeyEvent.KEYCODE_MENU, true);
-            }
-        });
-
-        floatButton.show(true);
         return START_NOT_STICKY;
+    }
+
+    private void show() {
+        if (floatButton == null) {
+            floatButton = new FloatButton(this);
+            floatButton.setImageResource(R.drawable.ic_launcher);
+            floatButton.setOnTouchListener(new FloatButton.OnTouchListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                    homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    homeIntent.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(homeIntent);
+                }
+
+                @Override
+                public void onDoubleClick(View view) {
+//                ShellUtils.execCommand("input keyevent " + KeyEvent.KEYCODE_MENU, true);
+                }
+            });
+
+        }
+        floatButton.show(true);
+    }
+
+    private void hide() {
+        floatButton.show(false);
     }
 
     @Override
