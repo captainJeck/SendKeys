@@ -3,10 +3,7 @@ package com.linjiaxiaohai.sendkeys;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 
 import com.linjiaxiaohai.sendkeys.view.FloatButton;
 
@@ -17,9 +14,6 @@ import com.linjiaxiaohai.sendkeys.view.FloatButton;
 public class FloatService extends Service {
 
     private FloatButton floatButton;
-    private WindowManager windowManager;
-    private WindowManager.LayoutParams params;
-    private DisplayMetrics displayMetrics;
 
     public static final String ACTION_SHOW = "com.linjiaxiaohai.sendkeys.action.show";
     public static final String ACTION_HIDE = "om.linjiaxiaohai.sendkeys.action.hide";
@@ -29,7 +23,6 @@ public class FloatService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -52,7 +45,7 @@ public class FloatService extends Service {
     private void show() {
         if (floatButton == null) {
             floatButton = new FloatButton(this);
-            floatButton.setImageResource(R.drawable.ic_launcher);
+            floatButton.setImageResource(R.drawable.ic_touch);
             floatButton.setOnTouchListener(new FloatButton.OnTouchListener() {
                 @Override
                 public void onClick(View view) {
@@ -64,7 +57,6 @@ public class FloatService extends Service {
 
                 @Override
                 public void onDoubleClick(View view) {
-//                ShellUtils.execCommand("input keyevent " + KeyEvent.KEYCODE_MENU, true);
                 }
             });
 
@@ -79,7 +71,6 @@ public class FloatService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("FloatService", "onDestroy");
         floatButton.show(false);
     }
 }
