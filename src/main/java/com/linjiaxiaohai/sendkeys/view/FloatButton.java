@@ -79,6 +79,7 @@ public class FloatButton extends ImageView {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                handler.removeMessages(MSG_TRANSLUCENT);
                 setTouchAlpha(255);
                 break;
             case MotionEvent.ACTION_UP:
