@@ -4,10 +4,12 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -60,6 +62,7 @@ public class FloatButton extends ImageView {
         try {
             if (isFloat) {
                 windowManager.addView(this, params);
+                sendTranslucentMessage();
             } else {
                 windowManager.removeView(this);
             }
@@ -75,8 +78,12 @@ public class FloatButton extends ImageView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                setTouchAlpha(255);
+                break;
             case MotionEvent.ACTION_UP:
                 sendStickyMessage(event);
+                sendTranslucentMessage();
                 break;
         }
         return gestureDetector.onTouchEvent(event);
@@ -87,6 +94,20 @@ public class FloatButton extends ImageView {
         msg.what = MSG_STICKY;
         msg.obj = event;
         handler.sendMessageDelayed(msg, 50);
+    }
+
+    private void sendTranslucentMessage() {
+        handler.sendEmptyMessageDelayed(MSG_TRANSLUCENT, 1500);
+    }
+
+    public void setTouchAlpha(int alpha) {
+        if (Build.VERSION.SDK_INT >= 16) {
+            setImageAlpha(alpha);
+        } else {
+            if (getDrawable() != null) {
+                getDrawable().setAlpha(alpha);
+            }
+        }
     }
 
     /**
@@ -106,6 +127,7 @@ public class FloatButton extends ImageView {
     private void animMoveToScreen(MotionEvent event) {
         if (animator == null) {
             animator = new ObjectAnimator();
+            animator.setTarget(this);
             animator.setInterpolator(new DecelerateInterpolator());
             animator.setDuration(300);
             animator.setFloatValues(0, 1);
@@ -152,7 +174,7 @@ public class FloatButton extends ImageView {
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-//            Log.i(TAG, "onSingleTapUp:");
+            Log.i(TAG, "onSingleTapUp:"+System.currentTimeMillis());
             handler.removeMessages(MSG_STICKY);
             return super.onSingleTapUp(e);
         }
@@ -168,6 +190,8 @@ public class FloatButton extends ImageView {
 
         @Override
         public boolean onDoubleTap(MotionEvent e) {
+            Log.i(TAG, "onDoubleTap:"+System.currentTimeMillis());
+            handler.removeMessages(MSG_STICKY);
             if (getOnTouchListener() != null) {
                 getOnTouchListener().onDoubleClick(FloatButton.this);
             }
@@ -192,7 +216,10 @@ public class FloatButton extends ImageView {
         void onDoubleClick(View view);
     }
 
+    private int ALPHA_TRANSLUCENT = 100;
+
     private final int MSG_STICKY = 1;
+    private final int MSG_TRANSLUCENT = 2;
 
     Handler handler = new Handler(){
         @Override
@@ -201,6 +228,9 @@ public class FloatButton extends ImageView {
             switch (msg.what) {
                 case MSG_STICKY:
                     animMoveToScreen((MotionEvent) msg.obj);
+                    break;
+                case MSG_TRANSLUCENT:
+                    setTouchAlpha(ALPHA_TRANSLUCENT);
                     break;
             }
         }
