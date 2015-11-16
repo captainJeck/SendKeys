@@ -3,6 +3,7 @@
     package="com.linjiaxiaohai.sendkeys" >
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 
     <application
         android:allowBackup="true"
@@ -20,8 +21,8 @@
         <service
             android:name=".FloatService"
             android:enabled="true"
-            android:exported="true" >
-        </service>
+            android:exported="true"
+            android:configChanges="orientation|keyboard" />
 
         <receiver
             android:name=".AdminReceiver"
@@ -30,7 +31,7 @@
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
-                android:resource="@layout/lock"/>
+                android:resource="@xml/lock"/>
             <intent-filter>
                 <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
             </intent-filter>

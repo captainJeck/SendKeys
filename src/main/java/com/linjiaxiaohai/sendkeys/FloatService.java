@@ -2,6 +2,7 @@ package com.linjiaxiaohai.sendkeys;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.IBinder;
 import android.view.View;
 
@@ -78,6 +79,14 @@ public class FloatService extends Service {
         Intent intent = new Intent(this, LockActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (floatButton.isFloat()) {
+            floatButton.update();
+        }
     }
 
     @Override

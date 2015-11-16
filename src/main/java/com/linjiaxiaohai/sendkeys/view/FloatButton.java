@@ -27,7 +27,7 @@ public class FloatButton extends ImageView {
     private WindowManager.LayoutParams params;
     private DisplayMetrics displayMetrics;
     private GestureDetector gestureDetector;
-    private boolean isFloat;
+    private boolean isFloat = false;
     private int defaultHeight = 60;
 
     private static final String TAG = "FloatButton";
@@ -58,10 +58,14 @@ public class FloatButton extends ImageView {
     }
 
     public void show(boolean isFloat) {
-        this.isFloat = isFloat;
         try {
             if (isFloat) {
-                windowManager.addView(this, params);
+                //如果已添加,则更新view
+                if (this.isFloat) {
+                    windowManager.updateViewLayout(this, params);
+                } else {
+                    windowManager.addView(this, params);
+                }
                 sendTranslucentMessage();
             } else {
                 windowManager.removeView(this);
@@ -69,8 +73,20 @@ public class FloatButton extends ImageView {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        this.isFloat = isFloat;
     }
 
+    /**
+     * 更新位置
+     */
+    public void update() {
+        animMoveToScreen(params.x, params.y);
+    }
+
+    /**
+     * 是否已添加
+     * @return
+     */
     public boolean isFloat() {
         return isFloat;
     }
@@ -126,6 +142,15 @@ public class FloatButton extends ImageView {
      * @param event
      */
     private void animMoveToScreen(MotionEvent event) {
+        animMoveToScreen(event.getRawX(), event.getRawY());
+    }
+
+    /**
+     * 已动画的形式移动到屏幕边缘
+     * @param x 原位置x
+     * @param y 原位置y
+     */
+    private void animMoveToScreen(final float x, final float y) {
         if (animator == null) {
             animator = new ObjectAnimator();
             animator.setTarget(this);
@@ -133,15 +158,13 @@ public class FloatButton extends ImageView {
             animator.setDuration(300);
             animator.setFloatValues(0, 1);
         }
-        final float oldX = event.getRawX();
-        final float oldY = event.getRawY();
-        float newX = getStickX(oldX);
-        final float range = newX - oldX;
+        float newX = getStickX(x);
+        final float range = newX - x;
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
-                move(range * value + oldX, oldY);
+                move(range * value + x, y);
             }
         });
         animator.start();
