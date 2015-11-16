@@ -19,6 +19,7 @@ public class FloatService extends Service {
     public static final String ACTION_HIDE = "om.linjiaxiaohai.sendkeys.action.hide";
 
     public FloatService() {
+
     }
 
     @Override
@@ -49,14 +50,12 @@ public class FloatService extends Service {
             floatButton.setOnTouchListener(new FloatButton.OnTouchListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent homeIntent = new Intent(Intent.ACTION_MAIN);
-                    homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    homeIntent.addCategory(Intent.CATEGORY_HOME);
-                    startActivity(homeIntent);
+                    goToHome();
                 }
 
                 @Override
                 public void onDoubleClick(View view) {
+                    lock();
                 }
             });
 
@@ -66,6 +65,19 @@ public class FloatService extends Service {
 
     private void hide() {
         floatButton.show(false);
+    }
+
+    private void goToHome() {
+        Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+        homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        homeIntent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(homeIntent);
+    }
+
+    private void lock() {
+        Intent intent = new Intent(this, LockActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override
