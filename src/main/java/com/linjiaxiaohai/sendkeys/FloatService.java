@@ -1,12 +1,18 @@
 package com.linjiaxiaohai.sendkeys;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.IBinder;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.linjiaxiaohai.sendkeys.view.FloatButton;
+
+import java.io.IOException;
 
 /**
  * float button
@@ -15,9 +21,11 @@ import com.linjiaxiaohai.sendkeys.view.FloatButton;
 public class FloatService extends Service {
 
     private FloatButton floatButton;
+    private boolean isLock;//是否锁屏
 
     public static final String ACTION_SHOW = "com.linjiaxiaohai.sendkeys.action.show";
     public static final String ACTION_HIDE = "om.linjiaxiaohai.sendkeys.action.hide";
+    public static final String ACTION_LOCK = "om.linjiaxiaohai.sendkeys.action.lock";
 
     public FloatService() {
 
@@ -38,6 +46,9 @@ public class FloatService extends Service {
                 case ACTION_HIDE:
                     hide();
                     break;
+                case ACTION_LOCK:
+
+                    break;
             }
         }
 
@@ -51,21 +62,74 @@ public class FloatService extends Service {
             floatButton.setOnTouchListener(new FloatButton.OnTouchListener() {
                 @Override
                 public void onClick(View view) {
-                    goToHome();
+                    operate("home");
                 }
 
                 @Override
                 public void onDoubleClick(View view) {
-                    lock();
+                    operate("lock");
                 }
             });
 
         }
         floatButton.show(true);
+        registerScreenReceiver();
     }
 
     private void hide() {
         floatButton.show(false);
+        unregisterReceiver(screenReceiver);
+    }
+
+    private void registerScreenReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        registerReceiver(screenReceiver, filter);
+    }
+
+    BroadcastReceiver screenReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case Intent.ACTION_SCREEN_OFF:
+                    isLock = true;
+                    break;
+                case Intent.ACTION_USER_PRESENT:
+                    isLock = false;
+                    break;
+            }
+        }
+    };
+
+    private void operate(String operate) {
+        if (isLock) {
+            lock();
+        } else {
+            try {
+                switch (FloatButton.Operate.valueOf(operate.toUpperCase())) {
+                    case BACK:
+                        goBack();
+                        break;
+                    case HOME:
+                        goToHome();
+                        break;
+                    case LOCK:
+                        lock();
+                        break;
+                }
+            } catch (IllegalArgumentException | NullPointerException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void goBack() {
+        try {
+            Runtime.getRuntime().exec("input keyevent " + KeyEvent.KEYCODE_BACK);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void goToHome() {

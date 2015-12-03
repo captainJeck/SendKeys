@@ -3,6 +3,7 @@ package com.linjiaxiaohai.sendkeys.view;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
@@ -47,7 +48,7 @@ public class FloatButton extends ImageView {
         params = new WindowManager.LayoutParams();
         params.width = (int) (defaultHeight * displayMetrics.density);
         params.height = (int) (defaultHeight * displayMetrics.density);
-        params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
         params.format = PixelFormat.RGBA_8888;
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.gravity = Gravity.LEFT | Gravity.TOP;
@@ -55,6 +56,8 @@ public class FloatButton extends ImageView {
         params.x = 0;
 
         gestureDetector = new GestureDetector(context, onGestureListener);
+        SharedPreferences sp ;
+
     }
 
     public void show(boolean isFloat) {
@@ -99,6 +102,7 @@ public class FloatButton extends ImageView {
                 setTouchAlpha(255);
                 break;
             case MotionEvent.ACTION_UP:
+                Log.i(TAG, "ACTION_UP");
                 sendStickyMessage(event);
                 sendTranslucentMessage();
                 break;
@@ -240,7 +244,7 @@ public class FloatButton extends ImageView {
         void onDoubleClick(View view);
     }
 
-    private int ALPHA_TRANSLUCENT = 100;
+    private int ALPHA_TRANSLUCENT = 120;
 
     private final int MSG_STICKY = 1;
     private final int MSG_TRANSLUCENT = 2;
@@ -259,4 +263,17 @@ public class FloatButton extends ImageView {
             }
         }
     };
+
+    public enum Operate {
+
+        BACK(0),
+        HOME(1),
+        LOCK(2);
+
+        private int code;
+
+        Operate(int code) {
+            this.code = code;
+        }
+    }
 }

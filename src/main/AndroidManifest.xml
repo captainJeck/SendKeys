@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.linjiaxiaohai.sendkeys" >
+    package="com.linjiaxiaohai.sendkeys">
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
@@ -9,8 +9,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
-        <activity android:name=".MainActivity" >
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,9 +20,9 @@
 
         <service
             android:name=".FloatService"
+            android:configChanges="orientation|keyboard"
             android:enabled="true"
-            android:exported="true"
-            android:configChanges="orientation|keyboard" />
+            android:exported="true" />
 
         <receiver
             android:name=".AdminReceiver"
@@ -31,14 +31,15 @@
             android:permission="android.permission.BIND_DEVICE_ADMIN">
             <meta-data
                 android:name="android.app.device_admin"
-                android:resource="@xml/lock"/>
+                android:resource="@xml/lock" />
+
             <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED"/>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".LockActivity" >
-        </activity>
+        <activity android:name=".LockActivity"></activity>
+
     </application>
 
 </manifest>
