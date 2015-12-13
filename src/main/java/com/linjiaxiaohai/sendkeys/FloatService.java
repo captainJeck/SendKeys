@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.linjiaxiaohai.sendkeys.utils.FloatKeeper;
 import com.linjiaxiaohai.sendkeys.view.FloatButton;
 
 import java.io.IOException;
@@ -26,6 +27,8 @@ public class FloatService extends Service {
     public static final String ACTION_SHOW = "com.linjiaxiaohai.sendkeys.action.show";
     public static final String ACTION_HIDE = "om.linjiaxiaohai.sendkeys.action.hide";
     public static final String ACTION_LOCK = "om.linjiaxiaohai.sendkeys.action.lock";
+    public static final String ACTION_UPDATE = "om.linjiaxiaohai.sendkeys.action.update";
+
 
     public FloatService() {
 
@@ -48,6 +51,9 @@ public class FloatService extends Service {
                     break;
                 case ACTION_LOCK:
 
+                    break;
+                case ACTION_UPDATE:
+                    updateLayout();
                     break;
             }
         }
@@ -103,7 +109,7 @@ public class FloatService extends Service {
     };
 
     private void operate(String operate) {
-        if (isLock) {
+        if (FloatKeeper.isFloatTop(this) && isLock) {
             lock();
         } else {
             try {
@@ -148,9 +154,18 @@ public class FloatService extends Service {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (floatButton.isFloat()) {
-            floatButton.update();
+        updateLocation();
+    }
+
+    private void updateLocation() {
+        if (floatButton != null && floatButton.isFloat()) {
+            floatButton.updateLocation();
         }
+    }
+
+    private void updateLayout() {
+        hide();
+        show();
     }
 
     @Override

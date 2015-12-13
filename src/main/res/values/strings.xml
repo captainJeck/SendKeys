@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">SendKeys</string>
     <string name="open_float_button">开启悬浮按钮</string>
+    <string name="float_top">悬浮于锁屏之上</string>
+    <string name="float_tip">* 点击返回桌面，双击锁屏\n* 开启‘悬浮于锁屏之上’，在锁屏时操作都为锁屏\n* 部分小米手机更换主题后会有收不到开屏通知的问题，请关闭‘悬浮于锁屏只手’功能</string>
 </resources>

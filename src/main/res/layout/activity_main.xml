@@ -1,17 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <android.support.v7.widget.SwitchCompat
+        android:id="@+id/open_float_button"
+        style="@style/Switch_float"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/open_float_button"
-        android:padding="10dp"
-        android:id="@+id/open_float_button" />
+        android:text="@string/open_float_button" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/little_gray" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/float_top"
+        style="@style/Switch_float"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/float_top" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/little_gray" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:lineSpacingExtra="2dp"
+        android:paddingLeft="10dp"
+        android:textSize="12sp"
+        android:paddingRight="10dp"
+        android:text="@string/float_tip" />
 </LinearLayout>

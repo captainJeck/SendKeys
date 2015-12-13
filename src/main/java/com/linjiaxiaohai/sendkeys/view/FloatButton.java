@@ -3,7 +3,6 @@ package com.linjiaxiaohai.sendkeys.view;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
@@ -18,6 +17,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+
+import com.linjiaxiaohai.sendkeys.utils.FloatKeeper;
 
 /**
  * Created by mengxn on 15-10-20.
@@ -48,7 +49,7 @@ public class FloatButton extends ImageView {
         params = new WindowManager.LayoutParams();
         params.width = (int) (defaultHeight * displayMetrics.density);
         params.height = (int) (defaultHeight * displayMetrics.density);
-        params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+        params.type = FloatKeeper.isFloatTop(context) ? WindowManager.LayoutParams.TYPE_SYSTEM_ERROR : WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
         params.format = PixelFormat.RGBA_8888;
         params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         params.gravity = Gravity.LEFT | Gravity.TOP;
@@ -56,7 +57,6 @@ public class FloatButton extends ImageView {
         params.x = 0;
 
         gestureDetector = new GestureDetector(context, onGestureListener);
-        SharedPreferences sp ;
 
     }
 
@@ -82,7 +82,7 @@ public class FloatButton extends ImageView {
     /**
      * 更新位置
      */
-    public void update() {
+    public void updateLocation() {
         animMoveToScreen(params.x, params.y);
     }
 
